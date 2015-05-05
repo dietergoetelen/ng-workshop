@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+
+</head>
+<body>
+
+    Hello {{ 'world' }}, 1 + 1 = {{ 1 + 1 }}.
+
+    <p>
+        <input type="text" ng-model="twoWayBinding"/>
+    </p>
+
+    <p>
+        twoWayBinding: {{ twoWayBinding }}
+    </p>
+
+    <p>
+        <input type="text" data-bind-to-html=".jqBinding"/>
+    </p>
+
+    <p>
+        jQuery binding: <span class="jqBinding"></span> <span class="jqBinding"></span>
+    </p>
+
+    <script src="../../libs/angular.js"></script>
+    <script src="../../libs/jquery.js"></script>
+
+    <script>
+        $(function() {
+            'use strict';
+
+            $('[data-bind-to-html]').on('keyup', keyPress);
+
+            function keyPress() {
+                var $this = $(this);
+                var target = $this.data('bindToHtml');
+
+                $(target).html($this.val());
+            }
+
+        }());
+    </script>
+
+</body>
+</html>
