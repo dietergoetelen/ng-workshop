@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+	<link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css"></link>
+
+</head>
+<body ng-controller="LayoutController as vm">
+
+    
+	{{ vm.title }}
+	
+	<button ng-click="vm.reverseTitle()">Reverse title</button>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<button class="btn btn-primary" ng-click="vm.loadToilets()">Load toilets</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row" ng-if="vm.loading">
+			<div class="col-md-12 text-center">
+				Loading . . . 
+			</div>
+		</div>
+		
+		<div class="row" ng-if="vm.toilets.length > 0">
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" ng-model="vm.searchFilter">
+				</div>
+			</div>
+		</div>
+		
+		<div class="row" ng-if="vm.toilets.length > 0">
+			<!-- 													filter on description, remove object to filter on all properties -->
+			<div class="col-md-6" ng-repeat="toilet in vm.toilets | filter:{ omschrijving: vm.searchFilter }">
+				<h3>{{ toilet.omschrijving  }}</h3>
+				<ul>
+					<li>Categorie: {{ toilet.categorie }}</li>
+					<li>Contactpersoon: {{ toilet.contactpersoon }}</li>
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	
+    <script src="../../libs/angular.js"></script>
+    
+    <script>
+		/**
+		 * Create a module
+		 * 	angular.module('name', []);
+		 * 
+		 * Get a module
+		 * 	angular.module('name');
+		 * 
+		 */
+        angular.module('app', [])
+			.controller('LayoutController', LayoutController)
+			.service('DataService', DataService);
+
+
+		/**
+		 * A controller is a Javascript function
+		 * We use
+		 * 	var vm = this
+		 * to avoid problems with 'this' context
+		 */		
+		function LayoutController(DataService) {
+			var vm = this;
+			
+			vm.title = "Hello, world!";
+			
+			/**
+			 * We use function pointers instead of anonymous functions to avoid hoisting problems
+			 * It also makes your controller more readable 
+			 * All declarations on the top, below the implementations
+			 */
+			vm.reverseTitle = reverseTitle;
+			vm.loadToilets = loadToilets;
+			
+			function loadToilets() {
+				vm.loading = true;
+				
+				return DataService.getToilets().then(function(toilets) {
+					vm.loading = false;
+					vm.toilets = toilets;
+				});
+			}
+			
+			function reverseTitle() {
+				vm.title = vm.title.split('').reverse().join('');
+			}
+		}
+		
+		/**
+		 * A service is also a Javascript function
+		 * We can use a service for:
+		 * - Sharing application state
+		 * - Getting data from the server
+		 * - SOC (Seperation Of Concerns)
+		 * 
+		 * @inject $http
+		 */
+		function DataService($http) {
+			var vm = this,
+				endpoint = "http://datasets.antwerpen.be/v4/gis/openbaartoilet.json";
+			
+			
+			vm.getToilets = getToilets;
+			
+			function getToilets() {
+				return $http.get(endpoint).then(function (result) {
+					// Return a new promise with the data we're interested in
+					return result.data.data;
+				});
+			}
+			
+		}
+    </script>
+</body>
+</html>
