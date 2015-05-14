@@ -32,8 +32,27 @@
 		
 		var vm = this;
 		
+		vm.saveTodo = saveTodo;
+		
 		// Initialize the application :-)
 		initialize();
+		
+		function saveTodo(todoItem) {
+			if (! vm.todo.items) {
+				vm.todo.items = [];
+			}
+			
+			todoItem.id = vm.todo.items.length + 1;
+			
+			// Add local
+			vm.todo.items.push(angular.copy(todoItem));
+			
+			// Clear form data
+			vm.formData = {};
+			
+			// Save in db :-)
+			localStorageService.setItem(STORAGE_KEY, vm.todo);
+		}
 		
 		function initialize() {
 			vm.todo = localStorageService.getItem(STORAGE_KEY);

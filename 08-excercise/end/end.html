@@ -24,10 +24,7 @@
 						<div class="list-group">
 							<div class="list-group-item" ng-repeat="item in vm.todo.items">
 								<div class="checkbox">
-									<label><input type="checkbox"></label>
-								</div>
-								<div>
-									{{ item.name }}
+									<label><input ng-checked="item.isCompleted" type="checkbox">{{ item.name }}</label>
 								</div>
 							</div>
 						</div>
@@ -37,13 +34,27 @@
 			
 			<div class="row">
 				<div class="col-md-6">
-					<form class="form">
+					
+					<h4>New</h4>
+					
+					<form class="form" ng-submit="vm.saveTodo(vm.formData)">
 						
 						<div class="form-group">
-							<label class="control-label col-md-3">Hello</label>
-							<input type="text" class="form-control">
+							<label>Name</label>
+							<input type="text" class="form-control" ng-model="vm.formData.name">
 						</div>
 						
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
+							</label>
+						</div>
+						
+						<div class="form-group">
+							<button class="btn btn-primary">
+								Save
+							</button>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -52,6 +63,7 @@
 		<script src="../../libs/angular.js"></script>
 		<script src="app/todo.js"></script>
 		<script src="app/todo.service.js"></script>
+		<script src="app/localstorage.service.js"></script>
 		<script src="app/todo.controller.js"></script>
 	</body>
 
