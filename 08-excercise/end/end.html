@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css"></link>
+	</head>
+	<body ng-controller="TodoController as vm">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="page-header">
+						<h3>My Todo</h3>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<!-- -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Todos</h3>
+						</div>
+						<div class="list-group">
+							<div class="list-group-item" ng-repeat="item in vm.todo.items">
+								<div class="checkbox">
+									<label><input type="checkbox"></label>
+								</div>
+								<div>
+									{{ item.name }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-6">
+					<form class="form">
+						
+						<div class="form-group">
+							<label class="control-label col-md-3">Hello</label>
+							<input type="text" class="form-control">
+						</div>
+						
+					</form>
+				</div>
+			</div>
+			
+		</div>
+		<script src="../../libs/angular.js"></script>
+		<script src="app/todo.js"></script>
+		<script src="app/todo.service.js"></script>
+		<script src="app/todo.controller.js"></script>
+	</body>
+
+</html>
