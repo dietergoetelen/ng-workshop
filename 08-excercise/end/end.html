@@ -19,12 +19,20 @@
 					<!-- -->
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title">Todos</h3>
+							<h3 class="panel-title">Todos
+								<div class="btn-group pull-right">
+									<button ng-click="vm.filter = undefined" ng-class="{'btn-primary': !vm.filter }" class="btn btn-default">Alle</button>
+									<button ng-click="vm.filter.isCompleted = false" ng-class="{'btn-primary': vm.filter.isCompleted === false}" class="btn btn-default">Todo</button>
+									<button ng-click="vm.filter.isCompleted = true" ng-class="{'btn-primary': vm.filter.isCompleted === true}" class="btn btn-default">Completed</button>
+								</div>
+								<div class="clearfix"></div>
+							</h3>
+								
 						</div>
 						<div class="list-group">
-							<div class="list-group-item" ng-repeat="item in vm.todo.items">
+							<div class="list-group-item" ng-repeat="item in vm.todo.items | filter:vm.filter">
 								<div class="checkbox">
-									<label><input ng-checked="item.isCompleted" type="checkbox">{{ item.name }}</label>
+									<label><input ng-click="vm.updateTodo(item)" ng-model="item.isCompleted" type="checkbox">{{ item.name }}</label>
 								</div>
 							</div>
 						</div>
@@ -37,7 +45,7 @@
 					
 					<h4>New</h4>
 					
-					<form class="form" ng-submit="vm.saveTodo(vm.formData)">
+					<form class="form" ng-submit="vm.addTodo(vm.formData)">
 						
 						<div class="form-group">
 							<label>Name</label>

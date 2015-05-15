@@ -21,12 +21,7 @@
 		}
 		
 		function setItem(key, data) {
-			angular.forEach(data.items, function (item) {
-				item.$$hashKey = null;
-				delete item.$$hashKey;
-			});
-			
-			window.localStorage.setItem(key, JSON.stringify(data));
+			window.localStorage.setItem(key, angular.toJson(data));
 		}
 	}
 	

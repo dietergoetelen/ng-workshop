@@ -26,36 +26,41 @@
 	angular.module('app')
 		.controller('TodoController', TodoController);
 		
-	TodoController.$inject = ['LocalStorageService'];
-	function TodoController(localStorageService) {
-		var STORAGE_KEY = "TODO_ITEMS";
+	TodoController.$inject = ['TodoService', '$log'];
+	function TodoController(todoService, $log) {
 		
 		var vm = this;
 		
-		vm.saveTodo = saveTodo;
+		vm.filter = undefined;
+		vm.addTodo = addTodo;
+		vm.updateTodo = updateTodo;
 		
 		// Initialize the application :-)
 		initialize();
+
+		function updateTodo(todoItem) {
+			return todoService.updateTodoItem(todoItem).then(function (item) {
+				$log.log('Item updated ;)', todoItem);
+			});
+		}
 		
-		function saveTodo(todoItem) {
-			if (! vm.todo.items) {
-				vm.todo.items = [];
-			}
-			
-			todoItem.id = vm.todo.items.length + 1;
-			
-			// Add local
-			vm.todo.items.push(angular.copy(todoItem));
+		function addTodo(todoItem) {
+			return todoService.addTodoItem(todoItem).then(function(item) {
+				vm.todo.items.push(angular.copy(item));
+			})
 			
 			// Clear form data
 			vm.formData = {};
-			
-			// Save in db :-)
-			localStorageService.setItem(STORAGE_KEY, vm.todo);
 		}
 		
 		function initialize() {
-			vm.todo = localStorageService.getItem(STORAGE_KEY);
+			return todoService.getTodoItems().then(function (result) {
+				vm.todo = result;
+				
+				if (! vm.todo.items) {
+					vm.todo.items = [];
+				}
+			});
 		}
 	}
 	
