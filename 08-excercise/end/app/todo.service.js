@@ -15,8 +15,13 @@
 				
 		function getTodoItems() {
 			var deferred = $q.defer();
+			var todo = JSON.parse(localStorage.getItem(STORAGE_KEY));
 			
-			deferred.resolve(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+			if (!todo.items) {
+				todo.items = [];
+			}
+			
+			deferred.resolve(todo);
 			
 			return deferred.promise;
 		}

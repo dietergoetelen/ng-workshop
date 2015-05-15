@@ -56,10 +56,6 @@
 		function initialize() {
 			return todoService.getTodoItems().then(function (result) {
 				vm.todo = result;
-				
-				if (! vm.todo.items) {
-					vm.todo.items = [];
-				}
 			});
 		}
 	}
