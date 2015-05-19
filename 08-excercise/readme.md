@@ -64,4 +64,66 @@ function TodoController(todoService) { // Lowercase - instance
 Het resultaat zetten we op de property `todo`. Deze property kunnen we benaderen vanuit onze view. 
 
 ## 3. View uitbreiden
+Als eerste moeten we een instantie maken van onze controller om mee te werken. 
+```
+<body ng-controller="TodoController as vm">
+  <pre>{{ vm.todo | json }}</pre>
+  ...
+</body>
+```
+**Tip: Via de `<pre>` tag en de `| json` filter kunnen we de data mooi weergeven op het scherm**
 
+Vervolgens kunnen we itereren over het items object via `ng-repeat`.
+
+```
+<div class="list-group-item" ng-repeat="item in vm.todo.items | filter:vm.filter">
+	<div class="checkbox">
+		<label><input ng-model="item.isCompleted" type="checkbox">{{ item.name }}</label>
+	</div>
+</div>
+```
+
+## 4. Let's add a new todo!
+De HTML is al voorzien
+```
+<form class="form" ng-submit="vm.addTodo(vm.formData)">
+	<div class="form-group">
+		<label>Name</label>
+		<input type="text" class="form-control" ng-model="vm.formData.name">
+	</div>
+	
+	<div class="checkbox">
+		<label>
+			<input type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
+		</label>
+	</div>
+	
+	<div class="form-group">
+        <!-- will call ng-submit -->
+		<button class="btn btn-primary">
+			Save
+		</button>
+	</div>
+</form>
+```
+
+Als men op de `Save` knop duwt, wordt de `ng-submit` functie opgeroepen. Deze functie krijgt het model binnen en kunnen we als volgt implementeren.
+
+```
+function TodoController(todoService) {
+   ... SNIP ...
+   vm.addTodo = addTodo;
+   
+   function addTodo(todoItem) {
+    todoService.addTodoItem(todoItem).then(function (item) {
+        // Add it to our local array
+        vm.todo.items.push(angular.copy(item));
+        
+        // Clear the formData
+        vm.formData = {};
+    });
+   }
+}
+```
+
+## 5. Service verder uitbreiden
