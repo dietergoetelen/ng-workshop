@@ -8,31 +8,75 @@
 
 </head>
 <body >
-
-    
-	<div class="container">
-		
-		<div class="row">
-			<div class="col-md-12">
-				<div class="page-header">
-					<h3>My Todo</h3>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="page-header">
+						<h3>My Todo</h3>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-md-12">
-				
+			<div class="row">
+				<div class="col-md-12">
+					<!-- -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Todos
+								<div class="btn-group pull-right">
+									<button class="btn btn-default">Alle</button>
+									<button class="btn btn-default">Todo</button>
+									<button class="btn btn-default">Completed</button>
+								</div>
+								<div class="clearfix"></div>
+							</h3>
+								
+						</div>
+						<div class="list-group">
+							<div class="list-group-item">
+								<div class="checkbox">
+									<label>
+                                        <input ng-click="vm.updateTodo(item)" ng-model="item.isCompleted" type="checkbox">
+                                        {{ item.name }}
+                                    </label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
+			
+			<div class="row">
+				<div class="col-md-6">
+					
+					<h4>New</h4>
+					
+					<form class="form" ng-submit="vm.addTodo(vm.formData)">
+						
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-control" ng-model="vm.formData.name">
+						</div>
+						
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
+							</label>
+						</div>
+						
+						<div class="form-group">
+							<button class="btn btn-primary">
+								Save
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			
 		</div>
-		
-	</div>
-	
-    <script src="../../libs/angular.js"></script>
-    
-	<script src="app/todo.js"></script>
-	<script src="app/todo.service.js"></script>
-	<script src="app/todo.controller.js"></script>
-	
-</body>
+		<script src="../../libs/angular.js"></script>
+		<script src="app/todo.js"></script>
+		<script src="app/todo.service.js"></script>
+		<script src="app/localstorage.service.js"></script>
+		<script src="app/todo.controller.js"></script>
+	</body>
 </html>
