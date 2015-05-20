@@ -27,6 +27,8 @@
 		function updateTodo(todoItem) {
 			return todoService.updateTodoItem(todoItem).then(function (item) {
 				$log.log('Item updated ;)', todoItem);
+                
+                return item;
 			});
 		}
 		

@@ -232,3 +232,58 @@ We kunnen een `ng-click` toevoegen op de checkbox. We geven het model mee door a
 ```html
 <input ng-click="vm.updateTodo(item)" type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
 ```
+
+De implementatie in de controller is zéér eenvoudig, we geen het aangepaste todoItem door naar de service
+
+```javascript
+function updateTodo(todoItem) {
+    return todoService.updateTodoItem(todoItem).then(function (item) {
+        console.log('item updated', item);
+        
+        return item;
+    });
+}
+```
+
+Zoals je ziet, door gebruik te maken van promises kunnen we functies gaan chainen via `.then`. 
+Een ander voordeel van promises is dat je `callback hell` kan vermijden. 
+
+```javascript
+// Van dit
+functionA(function(resultA) {
+    functionB(resultA, function (resultB) {
+        functionC(resultB, function (resultC) {
+            // doe iets met resultC
+        });
+    });
+});
+
+// Naar dit
+functionA()
+    .then(functionB)
+    .then(functionC)
+    .then(function(resultC) {
+        // Doe iets met resultC
+    });
+```
+
+De implementatie van de service is bijvoorbeeld als volgt.
+
+```javascript
+vm.updateTodoItem = updateTodoItem;
+
+function updateTodoItem(todoItem) {
+    return vm.getTodoItems().then(function (result) {
+        angular.forEach(result.items, function (item) {
+            if (todoItem.id === item.id) {
+                // Angular extend vervangt alle properties met nieuwe properties vanop todoItem
+                angular.extend(item, todoItem);
+            }
+        });
+
+        localStorageService.setItem(STORAGE_KEY, result);
+
+        return todoItem;
+    });
+}
+```
