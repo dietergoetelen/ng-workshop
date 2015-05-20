@@ -230,7 +230,7 @@ Als laatste stap moeten we nog data kunnen aanpassen.
 We kunnen een `ng-click` toevoegen op de checkbox. We geven het model mee door als parameter zodat we deze vanuit onze controller kunnen doorgeven aan de service. 
 
 ```html
-<input ng-click="vm.updateTodo(item)" type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
+<input ng-click="vm.updateTodo(item)" type="checkbox" ng-model="item.isCompleted"> Completed?
 ```
 
 De implementatie in de controller is zéér eenvoudig, we geen het aangepaste todoItem door naar de service
