@@ -191,10 +191,14 @@ Als implementatie halen we eerst alle todo items op, vervolgens voegen we de nie
 ```
 
 In deze functie zorgen we ervoor dat het `id` uniek is en dat `isCompleted` true of false bevat. 
-Om er zeker van te zijn dat isCompleted een boolean is, maken we gebruik van twee uitroeptekens. 
+Om er zeker van te zijn dat `isCompleted` een boolean is, maken we gebruik van twee uitroeptekens. 
 
 ```
     ! undefined; // result = true
     !! undefined; // result = false;
     !! true; // result = true;
 ```
+
+**Btw: this is why I love JavaScript :-)**
+
+
