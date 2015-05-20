@@ -201,4 +201,22 @@ Om er zeker van te zijn dat `isCompleted` een boolean is, maken we gebruik van t
 
 **Btw: this is why I love JavaScript :-)**
 
+Ondertussen kunnen we items toevoegen en verwijderen. Op naar de implementatie van de filter!
 
+## 6. Filter data
+De filter is al toegevoegd aan de `ng-repeat`. We moeten deze enkel nog de juiste waarde meegeven. 
+Dit kan heel eenvoudig door de `isCompleted` property van de filter op true of false te zetten. 
+Als er geklikt wordt op `alle` dan moet de filter gecleared worden.
+
+```
+ng-click="vm.filter = undefined"
+ng-click="vm.filter.isCompleted = true"
+ng-click="vm.filter.isCompleted = false" 
+```
+
+Via ng-class kunnen we de buttons actief maken.
+```
+<button ng-click="vm.filter = undefined" ng-class="{'btn-primary': !vm.filter }" class="btn btn-default">Alle</button>
+<button ng-click="vm.filter.isCompleted = false" ng-class="{'btn-primary': vm.filter.isCompleted === false}" class="btn btn-default">Todo</button>
+<button ng-click="vm.filter.isCompleted = true" ng-class="{'btn-primary': vm.filter.isCompleted === true}" class="btn btn-default">Completed</button>
+```
