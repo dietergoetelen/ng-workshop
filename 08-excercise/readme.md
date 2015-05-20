@@ -127,3 +127,43 @@ function TodoController(todoService) {
 ```
 
 ## 5. Service verder uitbreiden
+Deze applicatie wordt een offline applicatie. We maken hiervoor gebruik van localStorage.
+De service hiervoor is al geschreven en kan je als volgt injecteren in de todoService:
+
+```
+TodoService.$inject = ['LocalStorageService'];
+function TodoService(localStorageService) {
+    
+}
+```
+
+De localstorage service heeft 2 functies:
+```
+getItem(key); 
+setItem(key, data);
+```
+
+Data wordt opgeslagen in localstorage door een key mee te geven. 
+Via deze key kan je vervolgens de storage uitlezen. 
+Indien er nog niets in localstorage zit wordt er een leeg object teruggestuurd `{}`.
+
+De functie `getTodoItems` kunnen we dus als volgt aanpassen zodat deze gebruik maakt van localStorage:
+```
+function TodoService(localStorageService) {
+    var STORAGE_KEY = "TODO_ITEMS";
+    
+    ... SNIP ...
+    
+    vm.getTodoItems = getTodoItems;
+    
+    function getTodoItems() {
+        var deferred = $q.defer();
+        
+        var todo = localStorageService.getItem(STORAGE_KEY);
+        
+        deferred.resolve(todo);
+        
+        return deferred.promise;
+    }
+}
+```
