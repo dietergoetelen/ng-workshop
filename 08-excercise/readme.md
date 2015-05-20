@@ -131,8 +131,8 @@ Deze applicatie wordt een offline applicatie. We maken hiervoor gebruik van loca
 De service hiervoor is al geschreven en kan je als volgt injecteren in de todoService:
 
 ```javascript
-TodoService.$inject = ['LocalStorageService'];
-function TodoService(localStorageService) {
+TodoService.$inject = ['LocalStorageService', '$q'];
+function TodoService(localStorageService, $q) {
     
 }
 ```
@@ -149,7 +149,7 @@ Indien er nog niets in localstorage zit wordt er een leeg object teruggestuurd `
 
 De functie `getTodoItems` kunnen we dus als volgt aanpassen zodat deze gebruik maakt van localStorage:
 ```javascript
-function TodoService(localStorageService) {
+function TodoService(localStorageService, $q) {
     var STORAGE_KEY = "TODO_ITEMS";
     
     ... SNIP ...
