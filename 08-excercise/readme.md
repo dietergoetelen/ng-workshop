@@ -3,9 +3,9 @@
 ####[Slides](https://slides.com/dietergoetelen/deck/edit)
 
 ## 1. TodoService uitbreiden
-Als dataservice laag maken we gebruik van local storage. Local storage is in principe synchroon, toch is het interessant om asynchroon te werk te gaan. We maken gebruik van `$q`, een promise library om asynchroon te werk te gaan. 
+Als dataservice laag maken we gebruik van local storage. Local storage is in principe synchroon, toch is het interessant om asynchroon te werk te gaan. Als er in de toekomst beslist wordt om local storage te vervangen met een database hoeven we niet heel de applicatie te herschrijven. We maken gebruik van `$q`, een promise library om asynchroon te werk te gaan. 
 
-```
+```javascript
 function getHelloWorldAsync() {
     var deferred = $q.defer();
     deferred.resolve('Hello World');
@@ -20,7 +20,7 @@ getHelloWorldAsync().then(function (helloWorld) {
 De eerste functie die we uitschrijven is de functie `getTodoItems`.
 Open het bestand `todo.service.js` en vul aan met onderstaande code.
 Voorlopig maken we nog geen gebruik van de LocalStorageService.
-```
+```javascript
 function TodoService($q) {
     ... SNIP ...
     
@@ -48,7 +48,7 @@ function TodoService($q) {
 
 ## 2. TodoController uitbreiden
 Via de service kunnen we nu de todoItems gaan ophalen. Dit zou moeten uitgevoerd worden als de applicatie opstart. 
-```
+```javascript
 TodoController.$inject = ['TodoService']; // Uppercase - class
 function TodoController(todoService) { // Lowercase - instance
     ... SNIP ...
@@ -65,7 +65,7 @@ Het resultaat zetten we op de property `todo`. Deze property kunnen we benaderen
 
 ## 3. View uitbreiden
 Als eerste moeten we een instantie maken van onze controller om mee te werken. 
-```
+```html
 <body ng-controller="TodoController as vm">
   <pre>{{ vm.todo | json }}</pre>
   ...
@@ -75,7 +75,7 @@ Als eerste moeten we een instantie maken van onze controller om mee te werken.
 
 Vervolgens kunnen we itereren over het items object via `ng-repeat`.
 
-```
+```html
 <div class="list-group-item" ng-repeat="item in vm.todo.items | filter:vm.filter">
 	<div class="checkbox">
 		<label><input ng-model="item.isCompleted" type="checkbox">{{ item.name }}</label>
@@ -85,7 +85,7 @@ Vervolgens kunnen we itereren over het items object via `ng-repeat`.
 
 ## 4. Let's add a new todo!
 De HTML is al voorzien
-```
+```html
 <form class="form" ng-submit="vm.addTodo(vm.formData)">
 	<div class="form-group">
 		<label>Name</label>
@@ -109,7 +109,7 @@ De HTML is al voorzien
 
 Als men op de `Save` knop duwt, wordt de `ng-submit` functie opgeroepen. Deze functie krijgt het model binnen en kunnen we als volgt implementeren.
 
-```
+```javascript
 function TodoController(todoService) {
    ... SNIP ...
    vm.addTodo = addTodo;
@@ -130,7 +130,7 @@ function TodoController(todoService) {
 Deze applicatie wordt een offline applicatie. We maken hiervoor gebruik van localStorage.
 De service hiervoor is al geschreven en kan je als volgt injecteren in de todoService:
 
-```
+```javascript
 TodoService.$inject = ['LocalStorageService'];
 function TodoService(localStorageService) {
     
@@ -138,7 +138,7 @@ function TodoService(localStorageService) {
 ```
 
 De localstorage service heeft 2 functies:
-```
+```javascript
 getItem(key); 
 setItem(key, data);
 ```
@@ -148,7 +148,7 @@ Via deze key kan je vervolgens de storage uitlezen.
 Indien er nog niets in localstorage zit wordt er een leeg object teruggestuurd `{}`.
 
 De functie `getTodoItems` kunnen we dus als volgt aanpassen zodat deze gebruik maakt van localStorage:
-```
+```javascript
 function TodoService(localStorageService) {
     var STORAGE_KEY = "TODO_ITEMS";
     
@@ -161,6 +161,10 @@ function TodoService(localStorageService) {
         
         var todo = localStorageService.getItem(STORAGE_KEY);
         
+        if (!todo.items) {
+            todo.items = [];
+        }
+        
         deferred.resolve(todo);
         
         return deferred.promise;
@@ -171,7 +175,7 @@ function TodoService(localStorageService) {
 In de controller roepen we de `addTodoItem`functie op maar is nog niet geïmplementeerd.
 Als implementatie halen we eerst alle todo items op, vervolgens voegen we de nieuwe todoItem toe aan deze array en saven we deze data opnieuw op in localstorage. 
 
-```
+```javascript
     ... SNIP ...
     vm.addTodoItem = addTodoItem;
     
@@ -193,7 +197,7 @@ Als implementatie halen we eerst alle todo items op, vervolgens voegen we de nie
 In deze functie zorgen we ervoor dat het `id` uniek is en dat `isCompleted` true of false bevat. 
 Om er zeker van te zijn dat `isCompleted` een boolean is, maken we gebruik van twee uitroeptekens. 
 
-```
+```javascript
     ! undefined; // result = true
     !! undefined; // result = false;
     !! true; // result = true;
@@ -208,15 +212,23 @@ De filter is al toegevoegd aan de `ng-repeat`. We moeten deze enkel nog de juist
 Dit kan heel eenvoudig door de `isCompleted` property van de filter op true of false te zetten. 
 Als er geklikt wordt op `alle` dan moet de filter gecleared worden.
 
-```
+```html
 ng-click="vm.filter = undefined"
 ng-click="vm.filter.isCompleted = true"
 ng-click="vm.filter.isCompleted = false" 
 ```
 
-Via ng-class kunnen we de buttons actief maken.
-```
+Via ng-class kunnen we de buttons actief maken door de bootstrap klasse `btn-primary` te gebruiken.
+```html
 <button ng-click="vm.filter = undefined" ng-class="{'btn-primary': !vm.filter }" class="btn btn-default">Alle</button>
 <button ng-click="vm.filter.isCompleted = false" ng-class="{'btn-primary': vm.filter.isCompleted === false}" class="btn btn-default">Todo</button>
 <button ng-click="vm.filter.isCompleted = true" ng-class="{'btn-primary': vm.filter.isCompleted === true}" class="btn btn-default">Completed</button>
+```
+
+## 7. Update data!
+Als laatste stap moeten we nog data kunnen aanpassen. 
+We kunnen een `ng-click` toevoegen op de checkbox. We geven het model mee door als parameter zodat we deze vanuit onze controller kunnen doorgeven aan de service. 
+
+```html
+<input ng-click="vm.updateTodo(item)" type="checkbox" ng-model="vm.formData.isCompleted"> Completed?
 ```
