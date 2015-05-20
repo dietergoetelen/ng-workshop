@@ -167,3 +167,34 @@ function TodoService(localStorageService) {
     }
 }
 ```
+
+In de controller roepen we de `addTodoItem`functie op maar is nog niet geïmplementeerd.
+Als implementatie halen we eerst alle todo items op, vervolgens voegen we de nieuwe todoItem toe aan deze array en saven we deze data opnieuw op in localstorage. 
+
+```
+    ... SNIP ...
+    vm.addTodoItem = addTodoItem;
+    
+    function addTodoItem(todoItem) {
+        return vm.getTodoItems().then(function (result) {
+            todoItem.id = result.items.length + 1;
+            todoItem.isCompleted = !!todoItem.isCompleted;
+				
+            result.items.push(todoItem);
+				
+            localStorageService.setItem(STORAGE_KEY, result);
+            
+            return todoItem;
+        });
+    }
+    ... SNIP ...
+```
+
+In deze functie zorgen we ervoor dat het `id` uniek is en dat `isCompleted` true of false bevat. 
+Om er zeker van te zijn dat isCompleted een boolean is, maken we gebruik van twee uitroeptekens. 
+
+```
+    ! undefined; // result = true
+    !! undefined; // result = false;
+    !! true; // result = true;
+```
