@@ -54,6 +54,8 @@ function TodoController(todoService) { // Lowercase - instance
     ... SNIP ...
     var vm = this;
     
+    initialize();
+    
     function initialize() {
         return todoService.getTodoItems().then(function (result) {
             vm.todo = result;
