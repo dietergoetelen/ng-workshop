@@ -33,9 +33,9 @@
         $(function() {
             'use strict';
 
-            $('[data-bind-to-html]').on('keypress', keypress);
+            $('[data-bind-to-html]').on('keyup', keyup);
 
-            function keypress() {
+            function keyup() {
                 var $this = $(this);
                 var target = $this.data('bindToHtml');
 
