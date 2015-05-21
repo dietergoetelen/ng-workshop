@@ -23,7 +23,7 @@ Voorlopig maken we nog geen gebruik van de LocalStorageService.
 ```javascript
 function TodoService($q) {
     ... SNIP ...
-    
+    var vm = this;
     vm.getTodoItems = getTodoItems; // use a pointer to the function getTodoItems, do not use inline functions
     
     function getTodoItems() {
